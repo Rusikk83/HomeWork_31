@@ -26,10 +26,32 @@ class AdsListView(ListView):
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
 
-        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        name_filter = request.GET.get('text')  # получаем из запроса значание фильтра по имени
+        category_filter = request.GET.get('cat')
+        location_filter = request.GET.get('location')
+        price_from_filter = request.GET.get('price_from')
+        price_to_filter = request.GET.get('price_to')
+
+        if name_filter:
+            self.object_list = self.object_list.filter(name__contains=name_filter)  # фильтр по названию
+
+        if category_filter:
+            self.object_list = self.object_list.filter(category_id=category_filter)  # фильтр по категории
+
+        if price_from_filter:
+            self.object_list = self.object_list.filter(price__gte=price_from_filter)  # фильтр по нижней цене
+
+        if price_to_filter:
+            self.object_list = self.object_list.filter(price__lte=price_to_filter)  # фильтр по верхней цене
+
+        if location_filter:
+            self.object_list = self.object_list.filter(author__location__name__icontans=location_filter)  # это не работает
+
+
+
+        paginator = Paginator(self.object_list.order_by('name'), settings.TOTAL_ON_PAGE)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-
 
         ads = []
 
@@ -40,7 +62,7 @@ class AdsListView(ListView):
                 "author": ad.author_id,
                 "price": ad.price,
                 "description": ad.description,
-                "category": ad.category_id,
+                "category_id": ad.category_id,
                 "is_published": ad.is_published,
                 "image": ad.image.url if ad.image else None,
             })

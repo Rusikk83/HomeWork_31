@@ -18,7 +18,7 @@ class Categories(models.Model):
 
 class Location(models.Model):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     lat = models.CharField(max_length=10)
     lng = models.CharField(max_length=10)
 
