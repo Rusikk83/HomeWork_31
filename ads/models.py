@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
@@ -31,12 +32,12 @@ class Location(models.Model):
 
 
 
-class User(models.Model):
+class User(AbstractUser):
 
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30, null=True)
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
+    # first_name = models.CharField(max_length=30)
+    # last_name = models.CharField(max_length=30, null=True)
+    # username = models.CharField(max_length=20)
+    # password = models.CharField(max_length=20)
     role = models.CharField(max_length=15)
     age = models.IntegerField()
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
@@ -47,6 +48,14 @@ class User(models.Model):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+# class User_new(AbstractUser):
+#     MALE = 'm'
+#     FEMALE = 'f'
+#     SEX = [(MALE, 'Male'), (FEMALE, 'Female')]
+#
+#     sex = models.CharField(max_length=1, choices=SEX, default=MALE)
 
 
 
@@ -66,5 +75,6 @@ class Ads(models.Model):
     class Meta:
         verbose_name = "Объявление"
         verbose_name_plural = "Объявления"
+
 
 
