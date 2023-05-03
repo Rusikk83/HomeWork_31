@@ -8,9 +8,14 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from rest_framework.decorators import permission_classes
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from HomeWork_27 import settings
 from ads.models import Ads, Categories, User, Location
+from ads.permissions.ads_permissions import IsModerator
+from ads.serializers.ad_serialize import AdsDetailSerializer
 
 
 # Create your views here.
@@ -45,7 +50,7 @@ class AdsListView(ListView):
             self.object_list = self.object_list.filter(price__lte=price_to_filter)  # фильтр по верхней цене
 
         if location_filter:
-            self.object_list = self.object_list.filter(author__location__name__icontans=location_filter)  # это не работает
+            self.object_list = self.object_list.filter(author__location__name__icontains=location_filter)  # это не работает
 
 
 
@@ -75,23 +80,29 @@ class AdsListView(ListView):
         return JsonResponse(response, safe=False)
 
 
-class AdsDetailView(DetailView):
-    model = Ads
+class AdsDetailView(RetrieveAPIView):
+    queryset = Ads.objects.all()
+    serializer_class = AdsDetailSerializer
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        ad = self.get_object()
-
-        return JsonResponse({
-            "id": ad.id,
-            "name": ad.name,
-            "author_id": ad.author_id,
-            "price": ad.price,
-            "description": ad.description,
-            "category_id": ad.category_id,
-            "is_published": ad.is_published,
-            "image": ad.image.url if ad.image else None,
-
-        })
+# class AdsDetailView(DetailView):
+#     model = Ads
+#     permission_classes = [IsAuthenticated]
+#
+#     def get(self, request, *args, **kwargs):
+#         ad = self.get_object()
+#
+#         return JsonResponse({
+#             "id": ad.id,
+#             "name": ad.name,
+#             "author_id": ad.author_id,
+#             "price": ad.price,
+#             "description": ad.description,
+#             "category_id": ad.category_id,
+#             "is_published": ad.is_published,
+#             "image": ad.image.url if ad.image else None,
+#
+#         })
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -126,7 +137,7 @@ class AdsCreateView(CreateView):
             status=201)
 
 
-@method_decorator(csrf_exempt, name="dispatch")
+# @method_decorator(csrf_exempt, name="dispatch")
 class AdsUpdateView(UpdateView):
     model = Ads
 
@@ -162,6 +173,8 @@ class AdsUpdateView(UpdateView):
 class AdsDeleteView(DeleteView):
     model = Ads
     success_url = "/"
+    permission_classes = [IsAuthenticated]
+
 
     def delete(self, request, *args, **kwargs):
         super().delete(request, *args, **kwargs)

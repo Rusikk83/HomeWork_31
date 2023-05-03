@@ -77,4 +77,10 @@ class Ads(models.Model):
         verbose_name_plural = "Объявления"
 
 
+class Selection(models.Model):
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ManyToManyField(Ads)
+
+
 
