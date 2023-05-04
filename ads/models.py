@@ -34,11 +34,7 @@ class Location(models.Model):
 
 class User(AbstractUser):
 
-    # first_name = models.CharField(max_length=30)
-    # last_name = models.CharField(max_length=30, null=True)
-    # username = models.CharField(max_length=20)
-    # password = models.CharField(max_length=20)
-    role = models.CharField(max_length=15)
+    role = models.CharField(max_length=15, default='member')
     age = models.IntegerField()
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
 
@@ -48,15 +44,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-
-
-# class User_new(AbstractUser):
-#     MALE = 'm'
-#     FEMALE = 'f'
-#     SEX = [(MALE, 'Male'), (FEMALE, 'Female')]
-#
-#     sex = models.CharField(max_length=1, choices=SEX, default=MALE)
-
 
 
 class Ads(models.Model):
@@ -81,6 +68,13 @@ class Selection(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ManyToManyField(Ads)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Подборка"
+        verbose_name_plural = "Подборки"
 
 
 
