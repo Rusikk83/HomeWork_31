@@ -1,5 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
+
+from ads.validators.user_validators import check_birth_date, check_email
+
 
 # Create your models here.
 
@@ -7,6 +11,7 @@ from django.db import models
 class Categories(models.Model):
 
     name = models.CharField(max_length=30)
+    slug = models.SlugField(max_length=10, unique=True,  validators=[MinLengthValidator(5)]) #unique=True,
 
     def __str__(self):
         return self.name
@@ -35,8 +40,10 @@ class Location(models.Model):
 class User(AbstractUser):
 
     role = models.CharField(max_length=15, default='member')
-    age = models.IntegerField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    age = models.IntegerField(null=True)
+    location = models.IntegerField(null=True)#models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    birth_date = models.DateField(validators=[check_birth_date], null=True)
+    email = models.EmailField(unique=True, null=True, validators=[check_email])
 
     def __str__(self):
         return self.username
@@ -48,9 +55,9 @@ class User(AbstractUser):
 
 class Ads(models.Model):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(validators=[MinLengthValidator(10)], null=False, blank=False, max_length=300)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    price = models.IntegerField()
+    price = models.PositiveIntegerField()
     description = models.CharField(max_length=1000, null=True)
     is_published = models.BooleanField(default=False)
     image = models.ImageField(upload_to='images/')

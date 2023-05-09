@@ -64,7 +64,7 @@ class AdsListView(ListView):
             ads.append({
                 "id": ad.id,
                 "name": ad.name,
-                "author": ad.author_id,
+                "author_id": ad.author_id,
                 "price": ad.price,
                 "description": ad.description,
                 "category_id": ad.category_id,
@@ -89,7 +89,7 @@ class AdsDetailView(RetrieveAPIView):
 class AdsCreateView(CreateAPIView):
     queryset = Ads.objects.all()
     serializer_class = AdsCreateSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 
 

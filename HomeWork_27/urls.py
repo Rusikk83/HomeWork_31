@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
+from ads.urls.urls_cat import router_category
 from ads.urls.urls_selecion import router_selection
 from ads.views import views_ads
 from django.contrib import admin
@@ -20,15 +21,13 @@ urlpatterns = [
 
     path('user/', include('ads.urls.urls_user')),
 
-    path('cat/', include('ads.urls.urls_cat')),
-
-
     path('', views_ads.root),
 
 ]
 
 urlpatterns += router_location.urls
 urlpatterns += router_selection.urls
+urlpatterns += router_category.urls
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
