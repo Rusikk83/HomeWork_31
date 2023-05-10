@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=15, default='member')
     age = models.IntegerField(null=True)
-    location = models.IntegerField(null=True)#models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    #location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
     birth_date = models.DateField(validators=[check_birth_date], null=True)
     email = models.EmailField(unique=True, null=True, validators=[check_email])
 

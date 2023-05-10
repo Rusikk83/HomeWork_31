@@ -32,9 +32,9 @@ class UsersCreateView(CreateAPIView):
     model = User
     serializer_class = UserCreateSerializer
 
-    def perform_create(self, serializer):
-        location = get_object_or_404(Location, id=self.request.data.get('location_id'))
-        return serializer.save(location=location)
+    # def perform_create(self, serializer):
+    #     location = get_object_or_404(Location, id=self.request.data.get('location_id'))
+    #     return serializer.save(location=location)
 
 
 @method_decorator(csrf_exempt, name="dispatch")
