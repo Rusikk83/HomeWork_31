@@ -26,9 +26,9 @@ def test_ad_list(client):
             "is_published": ad.is_published,
             "image": ad.image.url if ad.image else None,
         })
-    list_sort = sorted(list, key=itemgetter('name'))  # сортировка по имени, как и во вьюсете
+    list_sorted = sorted(list, key=itemgetter('name'))  # сортировка по имени, как и во вьюсете
     result = {
-        'items': list_sort,
+        'items': list_sorted,
         'num_pages': 1,
         'total': 4,
 
